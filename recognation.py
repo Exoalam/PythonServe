@@ -1,22 +1,28 @@
 import face_recognition
 import cv2
+import numpy
 import numpy as np
 import PIL.Image
 
 
-if __name__ == '__main__':
+def face(image_file):
+    imname = ""
     obama_image = face_recognition.load_image_file("obama.jpg")
     obama_face_encoding = face_recognition.face_encodings(obama_image)[0]
     biden_image = face_recognition.load_image_file("biden.jpg")
     biden_face_encoding = face_recognition.face_encodings(biden_image)[0]
+    nafiul_image = face_recognition.load_image_file("nafiul.jpg")
+    nafiul_face_encoding = face_recognition.face_encodings(nafiul_image)[0]
 
     known_face_encodings = [
         obama_face_encoding,
-        biden_face_encoding
+        biden_face_encoding,
+        nafiul_face_encoding
     ]
     known_face_names = [
         "Barack Obama",
-        "Joe Biden"
+        "Joe Biden",
+        "Nafiul"
     ]
 
     # Initialize some variables
@@ -24,7 +30,7 @@ if __name__ == '__main__':
     face_encodings = []
     face_names = []
 
-    frame = cv2.imread('Rupok.jpg')
+    frame = cv2.cvtColor(numpy.array(image_file), cv2.COLOR_RGB2BGR)
 
     # Only process every other frame of video to save time
     if True:
@@ -47,7 +53,7 @@ if __name__ == '__main__':
             best_match_index = np.argmin(face_distances)
             if matches[best_match_index]:
                 name = known_face_names[best_match_index]
-
+            imname = name
             face_names.append(name)
 
     # Display the results
@@ -67,5 +73,6 @@ if __name__ == '__main__':
         cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
 
     # Display the resulting image
-    cv2.imshow('Video', frame)
-    cv2.imwrite("output.jpg", frame)
+    # cv2.imshow('Video', frame)
+    # cv2.waitKey(1)
+    return frame, imname

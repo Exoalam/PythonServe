@@ -1,19 +1,22 @@
 import base64
 import socket
 import json
+import threading
+
 import PIL.Image
 from io import BytesIO
+from recognation import *
 
 
-def server_start():
-    s = socket.socket()
-    print("Server Created")
-    port = 55667
-    s.bind(('', port))
-    print("socket binded to %s" % (port))
-    s.listen()
-    print("socket is listening")
+def server_receive():
     while True:
+        s = socket.socket()
+        print("Server Created")
+        port = 55667
+        s.bind(('', port))
+        print("socket binded to %s" % (port))
+        s.listen()
+        print("socket is listening")
         c, addr = s.accept()
         print('Got connection from', addr)
         incoming_data = c.recv(6553600).decode()
@@ -21,8 +24,36 @@ def server_start():
         image = json_file['data']
         name = json_file['name']
         im = PIL.Image.open(BytesIO(base64.b64decode(image)))
-        im.save(name + '.jpg', 'JPEG')
+        frame, pname = face(im)
+        serve_send(frame, pname)
+        c.close()
+        s.close()
 
+
+def serve_send(frame, pname):
+    s = socket.socket()
+    port = 25432
+    s.connect(('127.0.0.1', port))
+    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    img = PIL.Image.fromarray(frame)
+    # with open("i.jpg", "rb") as image_file:
+    buffered = BytesIO()
+    img.save(buffered, format="JPEG")
+    data = base64.b64encode(buffered.getvalue())
+    if pname == "Unknown":
+        pname = "Unknown"
+    else:
+        pname = "Known"
+    outgoing_data = '''
+            {
+                "code":"NAME",
+                "data":"''' + data.decode("utf-8") + '''"
+            }
+            '''
+    print(outgoing_data)
+    s.send(outgoing_data.encode())
+    s.close()
 
 if __name__ == '__main__':
-    server_start()
+    server_receive()
+

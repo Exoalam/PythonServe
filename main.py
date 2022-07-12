@@ -13,6 +13,7 @@ def server_receive():
         s = socket.socket()
         print("Server Created")
         port = 12344
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         s.bind(('', port))
         print("socket binded to %s" % (port))
         s.listen()

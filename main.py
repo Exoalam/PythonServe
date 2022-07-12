@@ -33,6 +33,8 @@ def server_receive():
         c.send(pname.encode())
         #serve_send(frame, pname)
         print(pname.encode())
+        c.close()
+        s.close()
 
 
 def serve_send(frame, pname):

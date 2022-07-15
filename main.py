@@ -23,6 +23,7 @@ def server_receive():
         incoming_data = ''
         while True:
             if (c.recv(1).decode() == '^'):
+                print(c.recv(255).decode())
                 incoming_data += c.recv(25536000).decode()
                 if (incoming_data[-1] == '$'):
                     json_file = json.loads(incoming_data[1:-1])

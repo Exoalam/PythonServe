@@ -24,21 +24,23 @@ def server_receive():
         while True:
             init = c.recv(3).decode()
             if (init == '^^^'):
-                print("Client Sending Data")
-                incoming_data += c.recv(25536000).decode()
-                if (incoming_data[-1] == '$'):
-                    json_file = json.loads(incoming_data[1:-1])
-                    image = json_file['data']
-                    name = json_file['TAG']
-                    im = PIL.Image.open(BytesIO(base64.b64decode(image)))
-                    frame, pname = face(im)
-                    c.send(pname.encode())
-                    # serve_send(frame, pname)
-                    print(pname.encode())
-                    if(pname != ""):
-                        c.close()
-                        s.close()
-                        break
+                while True:
+                    print("Client Sending Data")
+                    incoming_data += c.recv(25536000).decode()
+
+                    if (incoming_data[-1] == '$'):
+                        print(incoming_data)
+                        json_file = json.loads(incoming_data[0:-1])
+                        image = json_file['data']
+                        name = json_file['TAG']
+                        im = PIL.Image.open(BytesIO(base64.b64decode(image)))
+                        im = im.rotate(90)
+                        frame, pname = face(im)
+                        c.send(pname.encode())
+                        # serve_send(frame, pname)
+                        print(pname.encode())
+                        if (pname != ""):
+                            break
             elif (init == '$^$'):
                 c.close()
                 s.close()

@@ -22,8 +22,9 @@ def server_receive():
         print('Got connection from', addr)
         incoming_data = ''
         while True:
-            if (c.recv(1).decode() == '^'):
-                print(c.recv(255).decode())
+            init = c.recv(3).decode()
+            if (init == '^^^'):
+                print("Client Sending Data")
                 incoming_data += c.recv(25536000).decode()
                 if (incoming_data[-1] == '$'):
                     json_file = json.loads(incoming_data[1:-1])
@@ -38,9 +39,10 @@ def server_receive():
                         c.close()
                         s.close()
                         break
-            if (c.recv(250).decode() == '$^$'):
+            elif (init == '$^$'):
                 c.close()
                 s.close()
+                print("Client Disconnected")
                 break
 
 

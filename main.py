@@ -25,17 +25,21 @@ def server_receive():
             if (c.recv(1).decode() == '^'):
                 incoming_data += c.recv(25536000).decode()
                 if (incoming_data[-1] == '$'):
-                    break
-        json_file = json.loads(incoming_data[1:-1])
-        image = json_file['data']
-        name = json_file['TAG']
-        im = PIL.Image.open(BytesIO(base64.b64decode(image)))
-        frame, pname = face(im)
-        c.send(pname.encode())
-        #serve_send(frame, pname)
-        print(pname.encode())
-        c.close()
-        s.close()
+                    json_file = json.loads(incoming_data[1:-1])
+                    image = json_file['data']
+                    name = json_file['TAG']
+                    im = PIL.Image.open(BytesIO(base64.b64decode(image)))
+                    frame, pname = face(im)
+                    c.send(pname.encode())
+                    # serve_send(frame, pname)
+                    print(pname.encode())
+                    if(pname != ""):
+                        c.close()
+                        s.close()
+                        break
+            elif (c.recv(3).decode() == '$^$'):
+                c.close()
+                s.close()
 
 
 def serve_send(frame, pname):

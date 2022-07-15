@@ -22,9 +22,10 @@ def server_receive():
         print('Got connection from', addr)
         incoming_data = ''
         while True:
-            incoming_data += c.recv(25536000).decode()
-            if (incoming_data[-1] == '$'):
-                break
+            if (c.recv(1).decode() == '^'):
+                incoming_data += c.recv(25536000).decode()
+                if (incoming_data[-1] == '$'):
+                    break
         json_file = json.loads(incoming_data[1:-1])
         image = json_file['data']
         name = json_file['TAG']

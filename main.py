@@ -2,6 +2,7 @@ import base64
 import socket
 import json
 import threading
+import time
 
 import PIL.Image
 from io import BytesIO
@@ -27,26 +28,33 @@ def server_receive():
                 while True:
                     print("Client Sending Data")
                     incoming_data += c.recv(25536000).decode()
-
+                    print(incoming_data)
                     if (incoming_data[-1] == '$'):
+                        if(incoming_data[0:3] == '^^^'):
+                            incoming_data = incoming_data[3:]
                         print(incoming_data)
                         json_file = json.loads(incoming_data[0:-1])
                         image = json_file['data']
                         name = json_file['TAG']
+                        if(image == "SHUTDOWN"):
+                            break
                         im = PIL.Image.open(BytesIO(base64.b64decode(image)))
                         im = im.rotate(90)
                         frame, pname = face(im)
-                        c.send(pname.encode())
-                        # serve_send(frame, pname)
-                        print(pname.encode())
                         if (pname != ""):
+                            c.send(pname.encode())
+                            print(pname.encode())
                             break
+                        else:
+                            print("retrying")
+                            c.send("retrying".encode())
+                            incoming_data = ''
+
             elif (init == '$^$'):
                 c.close()
                 s.close()
                 print("Client Disconnected")
                 break
-
 
 def serve_send(frame, pname):
     s = socket.socket()

@@ -38,7 +38,7 @@ def server_receive():
                         c.close()
                         s.close()
                         break
-            elif (c.recv(5).decode() == '$^$'):
+            if (c.recv(250).decode() == '$^$'):
                 c.close()
                 s.close()
                 break

@@ -81,6 +81,7 @@ def face(image_file):
         cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
 
     # Display the resulting image
-    cv2.imshow('Video', frame)
-    cv2.waitKey(1)
+    #cv2.imshow('Video', frame)
+    #cv2.waitKey(1)
+    cv2.imwrite('image.jpg', frame)
     return frame, imname

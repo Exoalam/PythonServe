@@ -38,19 +38,19 @@ def face(image_file):
     face_encodings = []
     face_names = []
 
-    #frame = cv2.cvtColor(numpy.array(image_file), cv2.COLOR_RGB2BGR)
-    frame = numpy.array(image_file)
+    frame = cv2.cvtColor(numpy.array(image_file), cv2.COLOR_RGB2BGR)
+
     # Only process every other frame of video to save time
     #if True:
     # Resize frame of video to 1/4 size for faster face recognition processing
-    small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
+    small_frame = cv2.resize(frame, (0, 0), fx=0.10, fy=0.10)
 
     # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
-    #rgb_small_frame = small_frame[:, :, ::-1]
+    rgb_small_frame = small_frame[:, :, ::-1]
 
     # Find all the faces and face encodings in the current frame of video
-    face_locations = face_recognition.face_locations(small_frame)
-    face_encodings = face_recognition.face_encodings(small_frame, face_locations)
+    face_locations = face_recognition.face_locations(rgb_small_frame)
+    face_encodings = face_recognition.face_encodings(rgb_small_frame, face_locations)
 
     face_names = []
     for face_encoding in face_encodings:

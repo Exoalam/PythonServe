@@ -3,21 +3,10 @@ import cv2
 import numpy
 import numpy as np
 import PIL.Image
-
+from main import *
 
 def face(image_file):
     imname = ""
-    obama_image = face_recognition.load_image_file("obama.jpg")
-    obama_face_encoding = face_recognition.face_encodings(obama_image)[0]
-    biden_image = face_recognition.load_image_file("biden.jpg")
-    biden_face_encoding = face_recognition.face_encodings(biden_image)[0]
-    nafiul_image = face_recognition.load_image_file("nafiul.jpg")
-    nafiul_face_encoding = face_recognition.face_encodings(nafiul_image)[0]
-    kim_image = face_recognition.load_image_file("Dr_kim.jpg")
-    kim_face_encoding = face_recognition.face_encodings(kim_image)[0]
-    saif_image = face_recognition.load_image_file("Saifuddin.jpg")
-    saif_face_encoding = face_recognition.face_encodings(saif_image)[0]
-
     known_face_encodings = [
         obama_face_encoding,
         biden_face_encoding,

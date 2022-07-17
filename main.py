@@ -23,11 +23,13 @@ saif_face_encoding = face_recognition.face_encodings(saif_image)[0]
 def server_receive():
 
     while True:
+        try:
             s = socket.socket()
             print("Server Created")
             port = 12344
             s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             s.bind(('', port))
+            s.settimeout(10.0)
             print("socket binded to %s" % (port))
             s.listen()
             print("socket is listening")
@@ -72,6 +74,8 @@ def server_receive():
                     s.close()
                     print("Client Disconnected")
                     break
+        except:
+            print('Server Error Restarting')
 
 def serve_send(frame, pname):
     s = socket.socket()

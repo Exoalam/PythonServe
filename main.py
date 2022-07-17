@@ -23,50 +23,58 @@ saif_face_encoding = face_recognition.face_encodings(saif_image)[0]
 def server_receive():
 
     while True:
-        s = socket.socket()
-        print("Server Created")
-        port = 12344
-        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        s.bind(('', port))
-        print("socket binded to %s" % (port))
-        s.listen()
-        print("socket is listening")
-        c, addr = s.accept()
-        print('Got connection from', addr)
-        incoming_data = ''
-        while True:
-            init = c.recv(3).decode()
-            if (init == '^^^'):
-                while True:
-                    print("Client Sending Data")
-                    incoming_data += c.recv(25536000).decode()
-                    print(incoming_data)
-                    if (incoming_data[-1] == '$'):
-                        if(incoming_data[0:3] == '^^^'):
-                            incoming_data = incoming_data[3:]
-                        print(incoming_data)
-                        json_file = json.loads(incoming_data[0:-1])
-                        image = json_file['data']
-                        name = json_file['TAG']
-                        if(image == "SHUTDOWN"):
-                            break
-                        im = PIL.Image.open(BytesIO(base64.b64decode(image)))
-                        im = im.rotate(90)
-                        frame, pname = face(im)
-                        if (pname != ""):
-                            c.send(pname.encode())
-                            print(pname.encode())
-                            break
-                        else:
-                            print("retrying")
-                            c.send("retrying".encode())
-                            incoming_data = ''
+        try:
+            s = socket.socket()
+            print("Server Created")
+            port = 12344
+            s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            s.bind(('', port))
+            print("socket binded to %s" % (port))
+            s.listen()
+            print("socket is listening")
+            c, addr = s.accept()
+            print('Got connection from', addr)
+            incoming_data = ''
+            while True:
+                init = c.recv(3).decode()
+                if (init == '^^^'):
+                    while True:
+                        print("Client Sending Data")
+                        try:
+                            incoming_data += c.recv(25536000).decode()
+                            if (incoming_data[-1] == '$'):
+                                if (incoming_data[0:3] == '^^^'):
+                                    incoming_data = incoming_data[3:]
+                                print(incoming_data)
+                                try:
+                                    json_file = json.loads(incoming_data[0:-1])
+                                    image = json_file['data']
+                                    name = json_file['TAG']
+                                    if (image == "SHUTDOWN"):
+                                        break
+                                    im = PIL.Image.open(BytesIO(base64.b64decode(image)))
+                                    im = im.rotate(90)
+                                    frame, pname = face(im)
+                                    if (pname != ""):
+                                        c.send(pname.encode())
+                                        print(pname.encode())
+                                        break
+                                    else:
+                                        print("retrying")
+                                        c.send("retrying".encode())
+                                        incoming_data = ''
+                                except:
+                                       print("Json load error")
+                        except:
+                               print("Incoming data error")
 
-            elif (init == '$^$'):
-                c.close()
-                s.close()
-                print("Client Disconnected")
-                break
+                elif (init == '$^$'):
+                    c.close()
+                    s.close()
+                    print("Client Disconnected")
+                    break
+        except:
+            print('Server Error Restarting')
 
 def serve_send(frame, pname):
     s = socket.socket()

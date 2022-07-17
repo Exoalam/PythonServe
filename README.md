@@ -2,7 +2,7 @@
 2. Enter Password
 3. Type "screen -r"  to retreive session
 4. Press ctrl+z to stop session
-5. Press ctrl+a then k to kill process
+5. Press ctrl+a then k to kill process and type "yes" to confirm
 6. Type "screen" to start session
 7. Type "source env/bin/activate" to activate virtual environment
 8. Type "git pull origin" to sync with github (Optional)

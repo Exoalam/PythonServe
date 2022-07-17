@@ -29,7 +29,6 @@ def server_receive():
             port = 12344
             s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             s.bind(('', port))
-            s.settimeout(10.0)
             print("socket binded to %s" % (port))
             s.listen()
             print("socket is listening")

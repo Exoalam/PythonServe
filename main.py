@@ -35,7 +35,6 @@ def server_receive():
             c, addr = s.accept()
             print('Got connection from', addr)
             incoming_data = ''
-            s.settimeout(10.0)
             while True:
                 init = c.recv(3).decode()
                 if (init == '^^^'):

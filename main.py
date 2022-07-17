@@ -65,8 +65,10 @@ def server_receive():
                                         incoming_data = ''
                                 except:
                                        print("Json load error")
+                                       break
                         except:
                                print("Incoming data error")
+                               break
 
                 elif (init == '$^$'):
                     c.close()

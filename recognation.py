@@ -12,14 +12,18 @@ def face(image_file):
         biden_face_encoding,
         nafiul_face_encoding,
         kim_face_encoding,
-        saif_face_encoding
+        saif_face_encoding,
+        bailey_face_encoding,
+        gavin_face_encoding
     ]
     known_face_names = [
         "Barack Obama",
         "Joe Biden",
         "Nafiul",
         "Dr. KIM",
-        "Saifuddin"
+        "Saifuddin",
+        "Bailey",
+        "Gavin"
     ]
 
     # Initialize some variables

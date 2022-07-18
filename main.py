@@ -19,6 +19,10 @@ kim_image = face_recognition.load_image_file("Dr_kim.jpg")
 kim_face_encoding = face_recognition.face_encodings(kim_image)[0]
 saif_image = face_recognition.load_image_file("Saifuddin.jpg")
 saif_face_encoding = face_recognition.face_encodings(saif_image)[0]
+bailey_image = face_recognition.load_image_file("bailey.jpg")
+bailey_face_encoding = face_recognition.face_encodings(bailey_image)[0]
+gavin_image = face_recognition.load_image_file("gavin.jpg")
+gavin_face_encoding = face_recognition.face_encodings(gavin_image)[0]
 
 def server_receive():
 
